@@ -12,3 +12,19 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Booking{
+  id   Int       @id @default(autoincrement())
+  userId  Int
+  roomId   Int 
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookingAmount Int
+  status  BookingStatus
+}
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
