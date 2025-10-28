@@ -16,12 +16,25 @@ datasource db {
 model Booking{
   id   Int       @id @default(autoincrement())
   userId  Int
-  roomId   Int 
+  hotelId   Int 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   bookingAmount Int
-  status  BookingStatus
+  status  BookingStatus @default(PENDING)
+  total_Guests Int
+  idempotencyKey IdempotencyKey?
 }
+
+model IdempotencyKey {
+  id        Int       @id @default(autoincrement())
+  key       String    @unique // Unique idempotency key(uuid)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  finalized Boolean   @default(false)
+  bookingId Int       @unique
+  booking   Booking?  @relation(fields: [bookingId], references: [id]) 
+}
+
 enum BookingStatus {
   PENDING
   CONFIRMED
