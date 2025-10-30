@@ -8,6 +8,7 @@ import { attachCorrelationIdMiddleware } from './middlewares/correlation.middlew
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /**
  * Registering all the routers and their corresponding routes with out app server object.

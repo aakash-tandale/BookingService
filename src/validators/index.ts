@@ -12,6 +12,7 @@ export const validateRequestBody = (schema: AnyZodObject) => {
         try {
 
             logger.info("Validating request body");
+            logger.info("🟢 Received body: " + JSON.stringify(req.body));
             await schema.parseAsync(req.body);
             logger.info("Request body is valid");
             next();

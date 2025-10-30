@@ -4,7 +4,7 @@ const prismaClient = new PrismaClient();
 import { BookingStatus } from "@prisma/client"; 
 
 
-export async function createBookingService(bookingInput: Prisma.BookingCreateInput){
+export async function createBooking(bookingInput: Prisma.BookingCreateInput){
     // Business logic for creating a booking
     const booking=await prismaClient.booking.create({
         data:bookingInput
@@ -54,4 +54,23 @@ export async function changeBookingStatus(bookingId: number,status:BookingStatus
     })
     return booking
 
+}
+
+export async function confirmBooking(bookingId:number){
+
+    const booking=await prismaClient.booking.update({
+        where:{id:bookingId},
+        data:{status:BookingStatus.CONFIRMED}
+    })
+
+    return booking;
+}
+
+export async function finalizeIdempotencyKey(key:string){
+
+    const idempotencykey=await prismaClient.idempotencyKey.update({
+        where:{key:key},
+        data:{finalized:true}
+    })
+    return idempotencykey
 }
