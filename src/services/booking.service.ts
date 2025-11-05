@@ -3,8 +3,17 @@ import { generateIdempotencyKey } from "../utils/generateIdempotencyKey";
 import {NotFoundError,BadRequestError} from "../utils/errors/app.error"
 import { CreateBookingDTO } from "../dto/booking.dto";
 import prismaClient from '../prisma/client';
+import { serverConfig } from "../config";
+import {redlock, redisClient } from "../config/redis.config";
 
 export async function createBookingService(createBookingdto:CreateBookingDTO){
+
+    const ttl=serverConfig.LOCK_TTL;
+    const bookingResource=`hotel:${createBookingdto.hotelId}-user:${createBookingdto.userId}`;
+
+   return await redlock.using([
+    
+   ],ttl,async()=>{
 
     const booking=await createBooking({
         userId:createBookingdto.userId,
@@ -20,6 +29,9 @@ export async function createBookingService(createBookingdto:CreateBookingDTO){
         bookingId:booking.id,
         idempotencyKey:idempotencyKey
     }
+   })
+
+   
 
 
 }
